@@ -17,13 +17,18 @@ __pycache__/
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
-# Données (trop volumineuses pour git)
-data/raw/
-data/processed/
-*.csv
-*.json
-*.txt
-!requirements.txt
+# Données - On garde les datasets du projet (petits fichiers)
+# Mais on ignore les gros fichiers si ajoutés plus tard
+# data/raw/
+# data/processed/
+# *.csv
+# !requirements.txt
+
+# Ignorer seulement les très gros fichiers de données
+data/**/*.parquet
+data/**/*.h5
+data/**/*.hdf5
+data/**/*.feather
 
 # Modèles entraînés (trop volumineux)
 models/*.pt
