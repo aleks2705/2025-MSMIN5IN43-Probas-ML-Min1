@@ -35,7 +35,7 @@ class TrainResponse(BaseModel):
     coverage: float
     alpha_default: float
 
-
+# Entraîne un modèle depuis un CSV uploadé et retourne les métadonnées
 @app.post("/train", response_model=TrainResponse)
 async def train_endpoint(
     file: UploadFile = File(...),
@@ -76,7 +76,7 @@ class PredictResponseItem(BaseModel):
     lower: float
     upper: float
 
-
+# Prédit pour un batch d'instances et renvoie prediction + intervalle pour chaque instance
 @app.post("/predict", response_model=List[PredictResponseItem])
 def predict_endpoint(req: PredictRequest):
     path = os.path.join(MODELS_DIR, req.model_filename)
@@ -96,7 +96,7 @@ def predict_endpoint(req: PredictRequest):
 
     return results
 
-
+# Liste les modèles sauvegardés avec leurs métadonnées
 @app.get("/models")
 def list_models():
     models = []
@@ -120,7 +120,7 @@ def list_models():
             models.append({"filename": fname, "path": path, "error": "unable to load metadata"})
     return models
 
-
+# Retourne la liste des features et leur type estimé pour un modèle donné
 @app.get("/models/{model_filename}/features")
 def model_features(model_filename: str):
     path = os.path.join(MODELS_DIR, model_filename)
@@ -141,7 +141,7 @@ def model_features(model_filename: str):
     result = [{"name": fn, "type": "unknown"} for fn in feature_names]
     return result
 
-
+# Page d'accueil minimaliste listant les endpoints
 @app.get("/")
 def root():
     return {"msg": "Conformal Prediction API - endpoints: /train, /predict, /models, /models/{model_filename}/features"}
