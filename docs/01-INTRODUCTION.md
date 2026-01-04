@@ -126,4 +126,4 @@ Algorithme d'inférence pour calculer μ et σ après chaque match
 
 ---
 
-**→ Prochaine section : [Théorie TrueSkill](02-TRUESKILL-THEORY.md)**
+**→ Prochaine section : [Théorie TrueSkill](docs/02-TRUESKILL-THEORY.md)**

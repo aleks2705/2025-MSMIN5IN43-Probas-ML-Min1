@@ -241,4 +241,4 @@ Bob   : μ → 25 - (8.33²/14.1) × 0.798 ≈ 21.1
 
 ---
 
-**→ Prochaine section :  [Implémentation](03-IMPLEMENTATION.md)**
+**→ Prochaine section :  [Implémentation](docs/03-IMPLEMENTATION.md)**

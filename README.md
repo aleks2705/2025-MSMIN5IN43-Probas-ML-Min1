@@ -7,15 +7,15 @@
 
 ## 📋 Table des Matières
 
-1. [Introduction](01-INTRODUCTION.md) - Contexte et problématique
-2. [Théorie TrueSkill](02-TRUESKILL-THEORY.md) - Fondements mathématiques
-3. [Implémentation](03-IMPLEMENTATION.md) - Architecture technique
-4. [Visualisations](04-VISUALIZATIONS.md) - Graphiques et analyses
-5. [Comparaison ELO](05-COMPARISON-ELO.md) - TrueSkill vs ELO
-6. [Interface Web](06-WEB-INTERFACE.md) - Application Streamlit
-7. [Résultats](07-RESULTS.md) - Analyses et conclusions
-8. [Conclusion](08-CONCLUSION.md) - Bilan et perspectives
-9. [Sources](SOURCES.md) - Bibliographie complète
+1. [Introduction](docs/01-INTRODUCTION.md) - Contexte et problématique
+2. [Théorie TrueSkill](docs/02-TRUESKILL-THEORY.md) - Fondements mathématiques
+3. [Implémentation](docs/03-IMPLEMENTATION.md) - Architecture technique
+4. [Visualisations](docs/04-VISUALIZATIONS.md) - Graphiques et analyses
+5. [Comparaison ELO](docs/05-COMPARISON-ELO.md) - TrueSkill vs ELO
+6. [Interface Web](docs/06-WEB-INTERFACE.md) - Application Streamlit
+7. [Résultats](docs/07-RESULTS.md) - Analyses et conclusions
+8. [Conclusion](docs/08-CONCLUSION.md) - Bilan et perspectives
+9. [Sources](docs/SOURCES.md) - Bibliographie complète
 
 ---
 
