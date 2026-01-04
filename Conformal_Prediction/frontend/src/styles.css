@@ -1,15 +1,20 @@
 /* You can add global styles to this file, and also import other style files */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&display=swap');
 
 html, body { 
   height: 100%; 
   margin: 0; 
-  font-family: 'Roboto', "Helvetica Neue", sans-serif; 
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400; /* Adjusted for overall elegance */
 }
 
 body {
   position: relative;
   color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 .background-container {
@@ -39,9 +44,9 @@ body {
 /* Header */
 .page-header {
   width: 100%;
-  max-width: 1200px;
+  max-width: 900px; /* Limit header width to match main content */
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-start; /* Align logo to the left */
   align-items: center;
   padding: 1.5rem 0;
 }
@@ -49,27 +54,31 @@ body {
 .logo-container {
   display: flex;
   align-items: center;
+  gap: 0.75rem; /* Space between icon and text */
 }
 
-.logo-icon {
-  margin-right: 0.75rem;
+.logo-icon svg {
+  width: 35px; /* Adjust size */
+  height: 35px;
+  stroke: #F5F5F5; /* White stroke for icon */
+  stroke-width: 2;
 }
 
 .logo-text {
   font-family: 'Playfair Display', serif;
   font-size: 2rem;
   font-weight: 700;
-  color: #FFF;
+  color: #F5F5F5; /* White/Ivory for the base text color */
 }
 
 .scintillant-text {
-  font-family: 'Playfair Display', serif;
-  background: linear-gradient(45deg, #f0e6d2, #c8aa6d, #f0e6d2);
+  /* This class will be applied to the text you want to shine */
+  background: linear-gradient(to right, #F5F5F5, #e0e0e0, #F5F5F5); /* Silvery gradient */
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   text-fill-color: transparent;
-  text-shadow: 0 0 5px rgba(255, 223, 150, 0.3), 0 0 10px rgba(255, 223, 150, 0.2);
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.4); /* More pronounced glow */
 }
 
 /* Main Content */
@@ -85,9 +94,13 @@ body {
   padding: 2rem 0;
 }
 
-.hero-section h1 {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+.hero-title {
+  font-family: 'Cormorant Garamond', serif; /* High-fashion serif */
+  font-size: 2.8rem; /* Larger font size */
+  font-weight: 700;
+  color: #F5F5F5; /* Base color for the text */
+  margin-top: 0.5rem;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.2);
 }
 
 /* How it works */
@@ -99,8 +112,10 @@ body {
 
 .how-it-works-grid {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   gap: 1.5rem;
+  flex-wrap: wrap;
+  padding: 0 1rem;
 }
 
 .how-it-works-item {
@@ -112,22 +127,52 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.how-it-works-icon {
-  font-size: 2.5rem;
+.how-it-works-icon svg {
+  width: 40px;
+  height: 40px;
   margin-bottom: 1rem;
+  stroke: #F5F5F5; /* White stroke for icons as per request */
+  stroke-width: 1.5; /* Thin lines */
 }
 
-/* Simulator */
+.how-it-works-item h3 {
+  font-family: 'Cormorant Garamond', serif; /* Changed to Cormorant Garamond */
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.how-it-works-item p {
+  font-family: 'Cormorant Garamond', serif; /* Changed to Cormorant Garamond */
+  font-weight: 400; /* Adjusted for elegance */
+  font-size: 0.95rem;
+  line-height: 1.6; /* Increased line-height for airiness */
+}
+
+/* Estimation Block Wrapper */
+.estimation-block-wrapper {
+  background: rgba(0, 0, 0, 0.2); /* Translucent background */
+  padding: 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px); /* Glassmorphism effect */
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 2rem;
+}
+
 .simulator-intro {
   margin-bottom: 1.5rem;
   font-size: 1.1rem;
+  font-family: 'Cormorant Garamond', serif; /* Changed to Cormorant Garamond */
+  line-height: 1.5;
 }
 
 .simulator-controls {
-  background: rgba(0, 0, 0, 0.2);
+  /* No direct background or glassmorphism here as it's now in estimation-block-wrapper */
   padding: 1rem;
   border-radius: 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none; /* Remove border as it's on the wrapper */
+  background: transparent; /* Ensure no background */
 }
 
 .mat-expansion-panel {
@@ -146,34 +191,104 @@ body {
 
 .mat-expansion-panel-header-title, .mat-expansion-panel-header-description {
   color: white;
+  font-family: 'Cormorant Garamond', serif; /* Changed to Cormorant Garamond */
 }
 
 .form-container {
   padding: 1.5rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem;
+  gap: 1.5rem; /* Increased gap for airiness */
 }
 
 .mat-form-field-wrapper {
-    background: rgba(0, 0, 0, 0.3);
-    border-radius: 4px;
+    background: transparent; /* Make background transparent to show panel image */
+    border-radius: 6px;
+    padding: 0.5rem 1rem; /* Added padding */
+    box-sizing: border-box;
 }
 
 .mat-form-field-label {
-    color: rgba(255, 255, 255, 0.7) !important;
+    color: #F5F5F5 !important;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 400;
 }
 
 .mat-input-element {
     color: white !important;
+    font-family: 'Cormorant Garamond', serif; /* Changed to Cormorant Garamond */
 }
 
 .slider-container {
     padding: 2rem 0;
 }
 
-.mat-slider-thumb-label, .mat-slider-track-fill {
-    background-color: #ffffff !important;
+.mat-slider {
+  /* Override default slider styles for a minimalist look */
+  --mdc-slider-track-height: 2px !important; /* Thin track */
+  --mdc-slider-active-track-color: #F5F5F5 !important; /* White track */
+  --mdc-slider-inactive-track-color: rgba(245, 245, 245, 0.4) !important; /* Pale white inactive track */
+  --mdc-slider-handle-width: 16px !important; /* Smaller thumb */
+  --mdc-slider-handle-height: 16px !important;
+  --mdc-slider-handle-shape: 50% !important; /* Circular thumb */
+  --mdc-slider-handle-color: #F5F5F5 !important; /* White thumb */
+  --mdc-slider-handle-outline-width: 0px !important; /* No thick border */
+  --mdc-slider-focus-handle-color: #F5F5F5 !important;
+  --mdc-slider-hover-handle-color: #F5F5F5 !important;
+  --mdc-slider-hover-handle-ring-color: transparent !important; /* No hover ring */
+  --mdc-slider-active-handle-ring-color: transparent !important; /* No active ring */
+  
+  /* Explicitly target internal MDC classes for full control */
+  .mdc-slider__track--active {
+    background-color: #F5F5F5 !important;
+    border-color: #F5F5F5 !important;
+  }
+  .mdc-slider__track--inactive {
+    background-color: rgba(245, 245, 245, 0.4) !important;
+    border-color: rgba(245, 245, 245, 0.4) !important;
+  }
+  .mdc-slider__thumb-knob {
+    background-color: #F5F5F5 !important;
+    border-color: #F5F5F5 !important;
+  }
+  .mdc-slider__thumb-knob::before, .mdc-slider__thumb-knob::after {
+    background-color: transparent !important; /* Remove any ripple/focus effect background */
+    border-color: transparent !important;
+  }
+  .mdc-slider__value-indicator {
+    background-color: rgba(245, 245, 245, 0.9) !important;
+    color: #333 !important;
+  }
+  .mdc-slider__ripple {
+    background-color: transparent !important;
+  }
+  .mdc-slider__handle-ripple {
+    background-color: transparent !important;
+    border-color: transparent !important;
+  }
+  .mdc-slider__focus-ring {
+    background-color: transparent !important;
+  }
+  .mat-mdc-slider.mat-primary {
+    --mdc-slider-handle-color: #F5F5F5 !important;
+    --mdc-slider-focus-handle-color: #F5F5F5 !important;
+    --mdc-slider-hover-handle-color: #F5F5F5 !important;
+    --mdc-slider-active-track-color: #F5F5F5 !important;
+    --mdc-slider-inactive-track-color: rgba(245, 245, 245, 0.4) !important;
+    --mdc-slider-track-color: transparent !important; /* Ensure no default track color */
+  }
+}
+
+/* Ensure thumb label is readable */
+.mat-slider-thumb-label {
+  background-color: rgba(245, 245, 245, 0.9) !important;
+  color: #333 !important;
+}
+
+/* Specific styling for the thumb element */
+.mdc-slider__thumb-knob {
+    border: none !important;
+    box-shadow: 0px 0px 5px rgba(255, 255, 255, 0.6) !important;
 }
 
 .slider-label {
