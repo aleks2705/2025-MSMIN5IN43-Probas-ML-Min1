@@ -246,3 +246,21 @@ logs/
 *.bin
 *.pt
 pytorch_model.bin
+
+# ==========================================
+# COMPLÉMENTS STRUCTURE RÉELLE
+# ==========================================
+
+# Dossiers de modèles racine
+models/camembert_fakenews_model_final/
+models/ENG_Bert_fake_news_model_final/
+models/roberta-fake-news-ENG-Final/
+models/bert_fakenews_ENG_final/
+# Frontend complet
+frontend/node_modules/
+frontend/dist/
+frontend/package-lock.json
+
+# Fichiers de configuration IDE racine
+.vscode/
+.idea/

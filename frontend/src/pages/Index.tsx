@@ -10,16 +10,6 @@ import { ArrowRight, CheckCircle2, FileText } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-// 1. CONFIGURATION DE VOS MODÈLES HUGGING FACE
-const HUGGINGFACE_MODELS = {
-  camembert: "LamT45/camenbert_fakenews_model",
-  bert: "LamT45/ENG_Bert_fake_news_model_0301",
-  roberta: "LamT45/roberta-fake-news-ENG"
-};
-
-// Remplacez par votre token Hugging Face (disponible dans Settings > Access Tokens)
-const HF_TOKEN = import.meta.env.VITE_HF_TOKEN;
-
 type AnalysisResultType = {
   isReliable: boolean;
   confidence: number;
@@ -35,12 +25,14 @@ const Index = () => {
   const [inputValue, setInputValue] = useState("");
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResultType>(null);
+  
+  // État pour le modèle sélectionné
   const [selectedModel, setSelectedModel] = useState("camembert");
 
   const models = [
-    { id: "camembert", name: "CamemBERT", lang: "Français", icon: "🇫🇷" },
-    { id: "bert", name: "BERT", lang: "English", icon: "🇬🇧" },
-    { id: "roberta", name: "RoBERTa", lang: "English", icon: "🇺🇸" },
+    { id: "camembert", name: "CamemBERT", lang: "Français", icon: "FR" },
+    { id: "bert", name: "BERT", lang: "English", icon: "ENG" },
+    { id: "roberta", name: "RoBERTa", lang: "English", icon: "ENG" },
   ];
 
   const scrollToAnalyzer = () => {
@@ -57,52 +49,30 @@ const Index = () => {
     setResult(null);
 
     try {
-      const modelEndpoint = HUGGINGFACE_MODELS[selectedModel as keyof typeof HUGGINGFACE_MODELS];
-      
-      const response = await fetch(
-        `https://api-inference.huggingface.co/models/${modelEndpoint}`,
-        {
-          headers: { 
-            Authorization: `Bearer ${HF_TOKEN}`,
-            "Content-Type": "application/json"
-          },
-          method: "POST",
-          body: JSON.stringify({ inputs: inputValue }),
-        }
-      );
+      // APPEL RÉEL AU BACKEND FASTAPI
+      const response = await fetch("http://127.0.0.1:8000/predict", {
+        method: "POST",
+        headers: { 
+          "Content-Type": "application/json" 
+        },
+        body: JSON.stringify({ 
+          text: inputValue, 
+          model: selectedModel 
+        }),
+      });
 
-      const data = await response.json();
-
-      // Vérification si le modèle est encore en train de charger sur HF
-      if (data.error && data.error.includes("loading")) {
-        alert("Le modèle est en cours de chargement sur Hugging Face. Réessayez dans quelques secondes.");
-        setIsAnalyzing(false);
-        return;
+      if (!response.ok) {
+        throw new Error("Le serveur FastAPI ne répond pas.");
       }
 
-      // Extraction de la prédiction (généralement le premier élément du tableau retourné)
-      const prediction = Array.isArray(data) ? (Array.isArray(data[0]) ? data[0][0] : data[0]) : data;
+      const data = await response.json();
       
-      // Adaptation des scores pour l'affichage (supposant LABEL_1 = Reliable)
-      const score = Math.round(prediction.score * 100);
-      const isReliable = prediction.label === "LABEL_1" || prediction.label === "REAL" || prediction.label === "POSITIVE";
-
-      const finalResult: AnalysisResultType = {
-        isReliable: isReliable,
-        confidence: score,
-        factors: {
-          style: { score: score, label: "IA Score" },
-          vocabulary: { score: 85, label: "Analysé" },
-          source: { score: 90, label: "Vérifié" },
-        },
-        summary: `Analyse terminée. Le modèle ${selectedModel.toUpperCase()} identifie ce contenu comme étant ${isReliable ? 'fiable' : 'potentiellement trompeur'} avec un score de confiance de ${score}%.`,
-      };
-
-      setResult(finalResult);
+      // On affiche les données reçues de ton modèle Hugging Face
+      setResult(data);
       
     } catch (error) {
-      console.error("Erreur lors de l'appel API Hugging Face", error);
-      alert("Une erreur est survenue lors de la communication avec l'IA.");
+      console.error("Erreur lors de l'appel API", error);
+      // Optionnel : tu peux ajouter une notification d'erreur ici
     } finally {
       setIsAnalyzing(false);
     }
@@ -133,7 +103,7 @@ const Index = () => {
               </h1>
 
               <p className="mt-6 text-lg text-muted-foreground md:text-xl">
-                Notre intelligence artificielle analyse vos articles via vos modèles Hugging Face pour
+                Notre intelligence artificielle analyse le style, le vocabulaire et la source de vos articles pour
                 identifier les contenus trompeurs avec précision.
               </p>
 
@@ -143,7 +113,7 @@ const Index = () => {
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
                 <Button variant="outline" size="xl" asChild>
-                  <Link to="/documentation">En savoir plus</Link>
+                  <Link to="/comment-ca-marche">En savoir plus</Link>
                 </Button>
               </div>
             </motion.div>
@@ -162,7 +132,7 @@ const Index = () => {
           <div className="container max-w-3xl mx-auto">
             <div className="mb-8 text-center">
               <h2 className="font-display text-3xl font-bold text-foreground">Analysez votre article</h2>
-              <p className="mt-3 text-muted-foreground">Sélectionnez un modèle et collez votre texte pour lancer l'analyse en direct</p>
+              <p className="mt-3 text-muted-foreground">Sélectionnez un modèle et collez votre texte pour lancer l'analyse</p>
             </div>
 
             {/* SÉLECTEUR DE MODÈLE */}
@@ -181,7 +151,10 @@ const Index = () => {
                     {selectedModel === model.id && (
                       <CheckCircle2 className="absolute top-2 right-2 h-4 w-4 text-accent" />
                     )}
-                    <span className="text-2xl mb-1">{model.icon}</span>
+                    {/* AFFICHAGE FR/ENG AVEC POLICE DU PROJET */}
+                    <span className="font-display font-bold text-xl mb-1 tracking-tighter text-accent">
+                      {model.icon}
+                    </span>
                     <span className="font-bold text-sm">{model.name}</span>
                     <span className="text-xs text-muted-foreground">{model.lang}</span>
                   </button>
@@ -222,6 +195,42 @@ const Index = () => {
               {isAnalyzing && <AnalysisLoader />}
               {result && !isAnalyzing && <AnalysisResult result={result} />}
             </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="border-t bg-primary py-16 text-primary-foreground">
+          <div className="container">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+              className="mx-auto max-w-2xl text-center"
+            >
+              <h2 className="font-display text-3xl font-bold">Luttez contre la désinformation</h2>
+              <p className="mt-4 text-primary-foreground/80">
+                FactGuard utilise la puissance de CamemBERT et BERT pour assurer une information vérifiée.
+              </p>
+              <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
+                <Button
+                  variant="secondary"
+                  size="xl"
+                  className="bg-primary-foreground text-primary hover:bg-primary-foreground/90"
+                  onClick={scrollToAnalyzer}
+                >
+                  Commencer gratuitement
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="xl"
+                  className="text-primary-foreground hover:bg-primary-foreground/10"
+                  asChild
+                >
+                  <Link to="/documentation">Voir la documentation</Link>
+                </Button>
+              </div>
+            </motion.div>
           </div>
         </section>
       </main>

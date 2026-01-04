@@ -1,87 +1,142 @@
-# 📰 Détection de Fake News par NLP Avancé & Transformers
+# 🛡️ FactGuard : Détection de Fake News par NLP Avancé & Transformers
+
+---
 
 ## 📌 Présentation du projet
-Ce projet a été réalisé dans le cadre du **module de NLP avancé**.  
-L’objectif principal est de concevoir un **système intelligent de détection de Fake News**, capable de distinguer des articles **vrais** et **faux** en **anglais** et en **français**, en s’appuyant sur des **modèles Transformers de l’état de l’art**.
 
-Une attention particulière a été portée à la **résilience des modèles face à la désinformation sophistiquée**, notamment les contenus complotistes bien rédigés, via des **stratégies avancées de calibration et de pondération des erreurs**.
+Ce projet, réalisé dans le cadre du **module de NLP avancé**, propose un système intelligent de **détection de Fake News**.  
+L’objectif est de distinguer les articles **vrais** et **faux** en **anglais** et en **français**, en s’appuyant sur des modèles **Transformers de l’état de l’art**.
+
+Une attention particulière a été portée à la **résilience face à la désinformation sophistiquée** (contenus complotistes bien rédigés) via des stratégies avancées de **calibration** et de **pondération des erreurs**.
 
 ---
 
 ## 👥 Membres du groupe
-- **Nom Prénom**
-- **Nom Prénom**
-- **Nom Prénom**
 
-*(à compléter)*
-
----
-
-## 🎯 Objectifs techniques
-- **Multilinguisme**  
-  Fine-tuning de modèles spécifiques pour l’anglais et le français.
-
-- **Data Augmentation**  
-  Utilisation de la **Back-Translation (FR ↔ EN)** pour enrichir et équilibrer les jeux de données d’entraînement.
-
-- **Optimisation de la précision**  
-  Implémentation d’une **fonction de perte pondérée (Weighted Cross-Entropy)** afin de pénaliser davantage les faux négatifs.
-
-- **Calibration de l’inférence**  
-  Mise en place d’un **seuil de suspicion personnalisé** pour détecter des signaux faibles de désinformation.
+- Lamyae TALA 
+- Safae BERRICHI
+- Pauline GOFFINET
 
 ---
 
-## 🧠 Modèles & stratégies
+## 🎯 Objectifs techniques & Méthodologie
 
-### 🔹 Modèles pour l’anglais
-- **BERT** (`bert-base-uncased`)
-- **RoBERTa** (`roberta-base`)  
-  → Meilleure compréhension contextuelle et robustesse linguistique.
+Pour faire face aux Fake News **« haute fidélité »**, nous avons implémenté des techniques de pointe :
 
-### 🔹 Modèle pour le français
-- **CamemBERT** (`camembert-base`)  
-  → Fine-tuning avec **régularisation stricte (Weight Decay)** afin de limiter le biais stylistique et le sur-apprentissage.
+### 🔹 Multilinguisme & Data Augmentation
+- Utilisation de la **Back-Translation (FR ↔ EN)** via **Helsinki-NLP**
+- Enrichissement et équilibrage des jeux de données
+- Réduction du sur-apprentissage sur des patterns lexicaux spécifiques
 
----
+### 🔹 Weighted Cross-Entropy
+Implémentation d’un **Weighted Trainer** pour pénaliser davantage les faux négatifs :
 
-## 🧪 Méthodologie avancée
-Pour faire face aux **Fake News très bien rédigées**, nous avons mis en œuvre les techniques suivantes :
+- **Poids classe VRAI** : `1.0`
+- **Poids classe FAKE** : `3.0`  
+  *(Vigilance accrue face à la désinformation)*
 
-- **Back-Translation**  
-  Traduction automatique via *Helsinki-NLP* pour enrichir la classe minoritaire.
-
-- **Weighted Trainer**  
-  Pondération des classes :
-  - VRAI : **1.0**
-  - FAKE : **3.0**  
-  afin de rendre le modèle plus vigilant face à la désinformation.
-
-- **Ultra-Suspicious Threshold**  
-  Ajustement du seuil de décision lors de l’inférence :  
-  un article est signalé comme **suspect** dès que la confiance en la classe *VRAI* descend sous **99.99%**.
+### 🔹 Ultra-Suspicious Threshold
+- Ajustement dynamique du seuil de décision à l’inférence
+- Un article est signalé comme suspect dès que la **confiance en la véracité** passe sous un seuil critique
 
 ---
 
-## 🖥️ Interface utilisateur
-Une **interface interactive** permet à l’utilisateur de saisir un texte et d’obtenir un diagnostic immédiat selon le modèle choisi.
+## 🧠 Modèles & Inférence (Hugging Face)
 
-| Bouton | Langue | Modèle |
-|------|------|------|
-| 🇫🇷 CamemBERT | Français | CamemBERT v2 (calibré) |
-| 🇬🇧 BERT | Anglais | BERT-base |
-| 🇬🇧 RoBERTa | Anglais | RoBERTa-base |
+Les modèles sont entraînés, calibrés et hébergés sur le **Hub Hugging Face**.
+
+| Modèle     | Langue | Base Transformer        | Lien Hugging Face | Logique Label        |
+|-----------|--------|-------------------------|-------------------|----------------------|
+| CamemBERT | 🇫🇷 FR | camembert-base          | Consulter le modèle | 0 = Vrai / 1 = Fake |
+| BERT      | 🇬🇧 EN | bert-base-uncased       | Consulter le modèle | 1 = Vrai / 0 = Fake |
+| RoBERTa   | 🇺🇸 EN | roberta-base            | Consulter le modèle | 1 = Vrai / 0 = Fake |
 
 ---
 
-## 🗂️ Structure du projet
+## 🖥️ Architecture du Système (Full-Stack)
+
+Le projet est divisé en **trois briques technologiques** :
+
+### 1️⃣ Backend — FastAPI & PyTorch
+API robuste optimisée pour l’inférence sur **NVIDIA RTX 3050 Ti (4GB)** :
+
+- Gestion intelligente de la **VRAM**
+  - `torch.cuda.empty_cache()` lors du changement de modèle
+- **Normalisation du texte**
+  - Nettoyage via Regex (URLs, espaces, caractères parasites)
+
+### 2️⃣ Frontend — React & Tailwind CSS
+Interface utilisateur moderne et réactive :
+
+- Diagnostic immédiat avec **score de confiance**
+- Facteurs d’analyse : *Style*, *Vocabulaire*, *Source*
+- **UX dynamique** avec animations Framer Motion
+
+### 3️⃣ Notebooks — Recherche & Training
+- `EN_Fakenews_Bert.ipynb` : Pipeline anglais BERT
+- `EN_fakenews_RoBERTa.ipynb` : Pipeline anglais RoBERTa
+- `FR_Fake.ipynb` : Pipeline français (Augmentation + Calibration CamemBERT)
+
+---
+
+## 🛠️ Installation et Lancement
+
+### ▶ Backend
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+### ▶ Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+---
+
+## 🚦 Structure des Fichiers
+
 ```text
 .
-├── notebooks/
-│   ├── EN_Fakenews_Bert.ipynb      # Pipeline anglais - BERT
-│   ├── EN_fakenews_RoBERTa.ipynb   # Pipeline anglais - RoBERTa
-│   └── FR_Fake.ipynb               # Pipeline français (augmentation + calibration)
-├── interface/
-│   └── app.py                     # Application Streamlit / Gradio
-├── .gitignore                     # Exclusion des modèles > 100 Mo
-└── README.md
+├── notebooks/                      # Phase de Recherche & Entraînement
+│   ├── EN_Fakenews_Bert.ipynb      # Pipeline anglais — BERT
+│   ├── EN_fakenews_RoBERTa.ipynb   # Pipeline anglais — RoBERTa
+│   └── FR_Fake.ipynb               # Pipeline français — CamemBERT (Back-translation)
+│
+├── backend/                        # API FastAPI (Python)
+│   ├── main.py                     # Point d’entrée, configuration CORS et routes
+│   ├── requirements.txt            # Dépendances (FastAPI, Torch, Transformers, Pydantic)
+│   ├── .gitignore                  # Exclusion venv, __pycache__, fichiers .env
+│   └── app/
+│       ├── config.py               # Configuration (DEVICE GPU, modèles Hugging Face)
+│       ├── schemas.py              # Modèles Pydantic (AnalysisRequest, AnalysisResponse)
+│       ├── utils.py                # Nettoyage Regex & mapping des labels (0/1)
+│       ├── models/
+│       │   └── model_loader.py     # Inférence & gestion VRAM (RTX 3050 Ti)
+│       └── routes/
+│           └── predict.py          # Route POST /predict (IA ↔ API)
+│
+├── frontend/                       # Interface Utilisateur (React + Vite)
+│   ├── package.json                # Dépendances (Tailwind, Framer Motion, Lucide)
+│   ├── tailwind.config.js          # Configuration UI (couleurs, typographie)
+│   ├── src/
+│   │   ├── components/             # Composants UI
+│   │   │   ├── AnalysisLoader.tsx  # Animation de chargement
+│   │   │   └── AnalysisResults.tsx # Affichage des scores & jauges
+│   │   └── pages/
+│   │       └── Index.tsx           # Page principale (state + appels API)
+│   └── public/                     # Assets statiques
+│
+└── README.md                       # Documentation complète du projet
+
+```
+
+---
+
+## 🛡️ Licence
+
+Projet réalisé dans un **cadre académique** pour le module de **NLP Avancé**.  
+Modèles optimisés pour la **recherche** et la **prévention contre la désinformation**.
